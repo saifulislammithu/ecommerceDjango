@@ -1,0 +1,16 @@
+{% extends 'onlinestore/main.html' %}
+{% load static %}
+{% block content %}
+<div class="row">
+   <form method="post" action="{% url 'register'%}">
+   {% csrf_token %}
+   {{form.as_p}}
+   <button name="submit" class="btn btn-primary">Register</button>
+   
+     <input type="hidden"class="form-control" name="next" value="{% url 'home'%}"/>
+     
+   </form>
+
+</div>
+     
+{% endblock content %}

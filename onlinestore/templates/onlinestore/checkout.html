@@ -13,7 +13,6 @@
                         <input required class="form-control" type="email" name="email" placeholder="Email..">
                     </div>
                 </div>
-                
                 <div id="shipping-info">
                     <hr>
                     <p>Shipping Information:</p>
@@ -34,30 +33,58 @@
                 <hr>
                 <input id="form-button" class="btn btn-success btn-block" type="submit" value="Continue">
             </form>
-            <br>
+		</div>
+        <br>
             <div class="box-element hidden" id="payment-info">
 	            <small>Paypal Options</small>
+                <button id="make-payment">Make Payment</button>           
             </div>
-
-		</div>
-		
 	</div>
-
 	<div class="col-lg-6">
 		<div class="box-element">
             <a  class="btn btn-outline-dark" href="{% url 'cart' %}">&#x2190; Back to Cart</a>
             <hr>
             <h3>Order Summary</h3>
             <hr>
+            {%for item in items%}
             <div class="cart-row">
-                <div style="flex:2"><img class="row-image" src="{% static 'images/placeholder.png' %}"></div>
-                <div style="flex:2"><p>Product 1</p></div>
-                <div style="flex:1"><p>$20.00</p></div>
+                <div style="flex:2"><img class="row-image" src="{{item.product.imageURL }}"></div>
+                <div style="flex:2"><p>{{item.product.name}}</p></div>
+                <div style="flex:1"><p>${{item.product.price}}</p></div>
                 <div style="flex:1"><p>x2</p></div>
             </div>
-            <h5>Items:   2</h5>
-            <h5>Total:   $40</h5>
+            {% endfor %}
+            <h5>Items:   {{order.get_cart_items}}</h5>
+            <h5>Total:   ${{order.get_cart_total}}</h5>
         </div>
 	</div>
 </div>
+<script type="text/javascript">
+var shipping='{{order.shipping}}'
+if(shipping=='False'){
+    document.getElementById('shipping-info').innerHTML=''
+}
+if(user!='AnonymousUser'){
+    document.getElementById('user-info').innerHTML=''
+}
+if(shipping=='False' && user!='AnonymousUser'){
+    // Hide entire form if user is logged in and shipping is false
+    document.getElementById('form-wrapper').classList.add('hidden')
+    // Show payment if logged in user want to buy an item that does not requir shipping
+    document.getElementById('payment-info').classList.remove('hidden')
+}
+var form=document.getElementById('form')
+form.addEventListener('submit',function(e){
+    e.preventDefault()
+    console.log('Form submited..........')
+    document.getElementById('form-button').classList().add('hidden')
+    document.getElementById('payment-info').classList().remove('hidden')
+})
+document.getElementById('make-payment').addEventListener('click',function(e){
+    submitFormData()
+})
+function submitFormData(){
+    console.log('Payment button clicked...........')
+}
+</script>
 {% endblock content %}
