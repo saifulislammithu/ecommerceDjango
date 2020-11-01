@@ -27,7 +27,8 @@
     }
     return cookieValue;
 }
-const csrftoken = getcsrfToken('csrftoken');
+var csrftoken = getcsrfToken('csrftoken');
+console.log('CSRFTOKEN:',csrftoken)
 function getCookie(name){
   // split cookie string and get all name=value pairs in an array
   var cookieArr=document.cookie.split(";");
@@ -70,7 +71,7 @@ console.log('Cart:',cart)
           </ul>
           <div class="form-inline my-2 my-lg-0">
           {% if user.is_authenticated  %}
-          Hello-{{user.username}}
+          Hello,{{user.username}}
           
           <a href="{% url 'logout' %}"class="btn btn-warning">Logout</a>
           {% else %}
