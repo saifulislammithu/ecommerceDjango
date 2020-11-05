@@ -1,5 +1,6 @@
 import json
 from .models import *
+from users.models import NewUser
 
 def cookieCart(request):
     try:
@@ -35,7 +36,15 @@ def cookieCart(request):
     return {'cartItem':cartItem,'order':order,'items':items}
 def cartData(request):
     if request.user.is_authenticated:
-        customer=request.user.customer
+        user=request.user
+        print('UserName:',user)
+        customer=Customer.objects.get_or_create(user=user)
+        
+        
+        
+        #customer=Customer.objects.get_or_create(name=name)
+        #customer.save()
+        #customer=request.user.customer
         #customer.name=request.user.username
         #customer.email=request.user.email
         #newCustomer=customer.save()

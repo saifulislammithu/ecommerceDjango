@@ -1,32 +1,46 @@
+
 from django.shortcuts import render,redirect
-
-# Create your views here.
 from django.http import HttpResponseRedirect
-
 from django.contrib.auth import login,logout,authenticate
-from .models import *
 from django.contrib.auth.forms import UserCreationForm
+# Create your views here.
+from .models import NewUser
+from .forms import CreateUserForm
+#from django.contrib.auth.forms import UserCreationForm
 # Create your views here.
 def index(request):
     user=request.user
     context={'user':user}
     return render(request,'registration/index.html',context)
 def login_view(request):
-    
-    return render(request,'users/login.html')
+    if request.method=='POST':
+        username=request.POST.get('username')
+        password=request.POST.get('password')
+        user=authenticate(request,username=username,password=password)
+        if user is not None:
+            login(request,user)
+            return redirect('home')
+    context={}
+    return render(request,'registration/login.html',context)
 
 def register(request):
     if request.method!='POST':
         #Display blank registration form.
-        form=UserCreationForm()
+        form=CreateUserForm()
+        print('Blank Form Request:',form)
     else:
-        form=UserCreationForm(data=request.POST)
+        form=CreateUserForm(data=request.POST)
         if form.is_valid():
+        
+            password=form.clean_password2()
             new_user=form.save()
+            username=new_user.username
+
             #Log the user in then redirect to the home page.
-            authenticated_user=authenticate(username=new_user.username,password=request.POST['password1'])
-            login(request,authenticated_user)
-            return redirect('home')
+            user=authenticate(request,username=username,password=password)
+            if user is not None:
+                login(request,user)
+                return redirect('home')
     context={'form':form}
     return render(request,'registration/register.html',context)
 def logout_view(request):

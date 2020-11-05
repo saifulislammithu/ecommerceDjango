@@ -22,7 +22,7 @@ from django.conf import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',include('onlinestore.urls')),
-    path('users/',include('django.contrib.auth.urls')),
+    #path('users/',include('django.contrib.auth.urls')),
     path('users/',include('users.urls')),
 
 ]

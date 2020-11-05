@@ -1,14 +1,19 @@
 from django.db import models
-from django.contrib.auth.models import User
+from users.models import NewUser
 
 # Create your models here.
+class Category(models.Model):
+    name=models.CharField(max_length=200,null=True)
+    def __str__(self):
+        return self.name
 class Customer(models.Model):
-    user=models.OneToOneField(User,on_delete=models.CASCADE,null=True,blank=True)
+    user=models.OneToOneField(NewUser,on_delete=models.CASCADE,null=True,blank=True)
     name=models.CharField(max_length=200,null=True)
     email=models.CharField(max_length=200,null=True)
     def __str__(self):
         return self.name
 class Product(models.Model):
+    category=models.ForeignKey(Category,on_delete=models.SET_NULL,null=True,blank=True)
     name=models.CharField(max_length=200,null=True)
     price=models.DecimalField(max_digits=7,decimal_places=2)
     digital=models.BooleanField(default=False,null=True,blank=True)

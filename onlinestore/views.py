@@ -53,11 +53,13 @@ def updateItem(request):
 #from django.views.decorators.csrf import csrf_exempt
 #@csrf_exempt   
 def processOrder(request):
-    transaction_id=datetime.datetime.now().timestamp()
+    transaction_id=datetime.datetime.now()
     data=json.loads(request.body)
     print('Data:',data)
     if request.user.is_authenticated:
         customer=request.user.customer
+        customer.name=request.user.username
+        customer.save()
         order,created=Order.objects.get_or_create(customer=customer,complete=False)
     else:
         customer,order=guestOrder(request,data)
